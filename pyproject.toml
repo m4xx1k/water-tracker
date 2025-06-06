@@ -1,0 +1,23 @@
+[project]
+name = "water-tracker"
+version = "0.1.0"
+description = "A single-user water-tracker desktop app"
+authors = []
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ttkbootstrap>=1.10.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.setuptools]
+packages = ["model", "services", "repository", "ui", "util", "tests"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

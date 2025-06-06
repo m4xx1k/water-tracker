@@ -1,0 +1,6 @@
+.venv
+.pytest_cache
+.vscode
+.cursorrules
+.cursorignore
+.cursorignore
