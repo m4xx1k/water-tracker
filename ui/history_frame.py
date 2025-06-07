@@ -170,14 +170,6 @@ class EditWaterLogDialog(tk.Toplevel):
     def delete_water_log(self):
         """Видаляє запис про вживання води."""
         try:
-            # Підтвердження видалення
-            if not Messagebox.show_question(
-                title="Confirm Delete",
-                message="Are you sure you want to delete this water log?",
-                parent=self
-            ):
-                return
-            
             # Видаляємо запис
             self.water_log_service.delete_water_log(self.log_index)
             

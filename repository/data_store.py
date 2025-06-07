@@ -331,4 +331,25 @@ class DataStore:
                 
                 logs.append((i, log))
         
-        return logs 
+        return logs
+    
+    def clear_all_data(self) -> bool:
+        """
+        Видаляє всі дані і повертає сховище до початкового стану.
+        
+        Returns:
+            True, якщо дані успішно очищені, інакше False.
+        """
+        try:
+            # Скидаємо дані до початкового стану
+            self.data = {
+                "profile": None,
+                "water_logs": [],
+                "checksum": ""
+            }
+            
+            # Зберігаємо оновлені дані
+            return self.save()
+        except Exception as e:
+            logger.error(f"Помилка при очищенні даних: {e}")
+            return False 

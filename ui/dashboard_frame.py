@@ -48,20 +48,33 @@ class ModernCircularMeter(ttk.Frame):
         )
         self.canvas.pack()
         
-        # Background circle
-        self.bg_arc = self.canvas.create_arc(
+        # Background circle - змінюємо на arc для однакової товщини з прогрес-дугою
+        self.bg_circle = self.canvas.create_arc(
             self.width//2, self.width//2, 
             self.size - self.width//2, self.size - self.width//2,
-            start=0, extent=360, 
-            style=tk.ARC, outline=self.bg_color, width=self.width
+            start=0, extent=359.9,
+            style=tk.ARC,
+            outline=self.bg_color,
+            width=self.width
         )
         
-        # Progress arc
+        # Потім малюємо менше коло в центрі з кольором фону canvas
+        inner_size = self.size - self.width*2
+        self.inner_circle = self.canvas.create_oval(
+            self.size//2 - inner_size//2, self.size//2 - inner_size//2,
+            self.size//2 + inner_size//2, self.size//2 + inner_size//2,
+            fill=self.winfo_toplevel().cget("background"),
+            outline=""
+        )
+        
+        # Тепер прогрес-дуга буде видима на фоні кільця
         self.progress_arc = self.canvas.create_arc(
             self.width//2, self.width//2, 
             self.size - self.width//2, self.size - self.width//2,
             start=90, extent=0, 
-            style=tk.ARC, outline=self.progress_color, width=self.width
+            style=tk.ARC,
+            outline=self.progress_color,
+            width=self.width
         )
         
         # Center circle background
@@ -112,8 +125,8 @@ class ModernCircularMeter(ttk.Frame):
     
     def _update_display(self):
         """Updates the visual display."""
-        # Update progress arc
-        extent = -360 * self.current_value
+        # Update progress arc - запобігаємо повному колу при 100%
+        extent = -359.9 if self.current_value >= 1.0 else -360 * self.current_value
         self.canvas.itemconfig(self.progress_arc, extent=extent)
         
         # Update color based on progress
@@ -130,6 +143,7 @@ class ModernCircularMeter(ttk.Frame):
             color = self.progress_color
             status = "Start!"
         
+        # Змінюємо outline колір для ARC стилю
         self.canvas.itemconfig(self.progress_arc, outline=color)
         
         # Update text
@@ -220,14 +234,27 @@ class WaterLogDialog(tk.Toplevel):
         note_frame = ttk.Frame(main_frame)
         note_frame.pack(fill=X, pady=(0, 20))
         
-        ttk.Label(note_frame, text="Note (optional):", font=("TkDefaultFont", 10)).pack(anchor=W, pady=(0, 5))
+        ttk.Label(note_frame, text="Note (optional, max 36 characters):", font=("TkDefaultFont", 10)).pack(anchor=W, pady=(0, 5))
         
         note_entry = ttk.Entry(
             note_frame, 
             textvariable=self.note_var,
-            font=("TkDefaultFont", 11)
+            font=("TkDefaultFont", 11),
+            validate="key",
+            validatecommand=(self.register(lambda text: len(text) <= 36), '%P')
         )
         note_entry.pack(fill=X)
+        
+        # Додаємо підказку про кількість символів
+        char_count = ttk.Label(note_frame, text="0/36", font=("TkDefaultFont", 8), foreground="#6c757d")
+        char_count.pack(anchor=E, pady=(2, 0))
+        
+        # Оновлюємо лічильник при зміні тексту
+        def update_char_count(*args):
+            current_len = len(self.note_var.get())
+            char_count.config(text=f"{current_len}/36")
+        
+        self.note_var.trace_add("write", update_char_count)
         
         # Buttons
         button_frame = ttk.Frame(main_frame)
@@ -371,7 +398,7 @@ class DashboardFrame(ttk.Frame):
                 text=text,
                 command=lambda a=amount: self.quick_add_water(a),
                 bootstyle="primary-outline",
-                width=9
+                width=8
             )
             btn.pack(side=LEFT, padx=1)
         
