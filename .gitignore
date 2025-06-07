@@ -5,3 +5,11 @@
 .cursorignore
 .coverage
 .coverage.*
+model/__pycache__/
+repository/__pycache__/
+services/__pycache__/
+tests/__pycache__/
+ui/__pycache__/
+util/__pycache__/
+water_tracker.egg-info
+water_tracker.log
