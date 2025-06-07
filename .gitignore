@@ -3,4 +3,5 @@
 .vscode
 .cursorrules
 .cursorignore
-.cursorignore
+.coverage
+.coverage.*

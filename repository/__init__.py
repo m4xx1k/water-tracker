@@ -1,3 +1,3 @@
 """
-Модуль доступу до даних для додатку Water Tracker.
+Data access module for the Water Tracker application.
 """ 

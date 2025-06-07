@@ -1,3 +1,3 @@
 """
-Модуль інтерфейсу користувача для додатку Water Tracker.
+User interface module for the Water Tracker application.
 """ 

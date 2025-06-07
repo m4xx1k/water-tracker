@@ -1,5 +1,5 @@
 """
-Фрейм для управління профілем користувача.
+Frame for managing user profile.
 """
 
 from typing import Callable, Optional
@@ -11,39 +11,39 @@ from services.profile_service import ProfileService
 
 
 class ProfileFrame(ttk.Frame):
-    """Фрейм для створення та редагування профілю користувача."""
+    """Frame for creating and editing user profile."""
     
     def __init__(self, parent, profile_service: ProfileService, on_profile_updated: Callable[[], None]):
         """
-        Ініціалізує фрейм профілю.
+        Initializes the profile frame.
         
         Args:
-            parent: Батьківський віджет.
-            profile_service: Сервіс профілю користувача.
-            on_profile_updated: Callback-функція, яка викликається при оновленні профілю.
+            parent: Parent widget.
+            profile_service: User profile service.
+            on_profile_updated: Callback function called when profile is updated.
         """
         super().__init__(parent)
         
         self.profile_service = profile_service
         self.on_profile_updated = on_profile_updated
         
-        # Змінні для зберігання введених значень
+        # Variables for storing input values
         self.height_var = ttk.IntVar()
         self.weight_var = ttk.DoubleVar()
         self.age_var = ttk.IntVar()
         self.gender_var = ttk.StringVar(value="MALE")
         
-        # Встановлення значень за замовчуванням
+        # Set default values
         self.height_var.set(170)
         self.weight_var.set(70.0)
         self.age_var.set(30)
         
-        # Створення інтерфейсу
+        # Create interface
         self.create_widgets()
     
     def create_widgets(self):
-        """Створює віджети фрейму."""
-        # Заголовок
+        """Creates frame widgets."""
+        # Header
         header_frame = ttk.Frame(self)
         header_frame.pack(fill=X, pady=10)
         
@@ -61,11 +61,11 @@ class ProfileFrame(ttk.Frame):
         )
         description_label.pack(pady=5)
         
-        # Форма профілю
+        # Profile form
         form_frame = ttk.Frame(self)
         form_frame.pack(fill=BOTH, padx=50, pady=20)
         
-        # Зріст
+        # Height
         height_frame = ttk.Frame(form_frame)
         height_frame.pack(fill=X, pady=10)
         
@@ -78,7 +78,7 @@ class ProfileFrame(ttk.Frame):
         height_unit = ttk.Label(height_frame, text="cm", width=5)
         height_unit.pack(side=LEFT, padx=5)
         
-        # Вага
+        # Weight
         weight_frame = ttk.Frame(form_frame)
         weight_frame.pack(fill=X, pady=10)
         
@@ -91,7 +91,7 @@ class ProfileFrame(ttk.Frame):
         weight_unit = ttk.Label(weight_frame, text="kg", width=5)
         weight_unit.pack(side=LEFT, padx=5)
         
-        # Вік
+        # Age
         age_frame = ttk.Frame(form_frame)
         age_frame.pack(fill=X, pady=10)
         
@@ -104,7 +104,7 @@ class ProfileFrame(ttk.Frame):
         age_unit = ttk.Label(age_frame, text="years", width=5)
         age_unit.pack(side=LEFT, padx=5)
         
-        # Стать
+        # Gender
         gender_frame = ttk.Frame(form_frame)
         gender_frame.pack(fill=X, pady=10)
         
@@ -120,7 +120,7 @@ class ProfileFrame(ttk.Frame):
             )
             gender_radio.pack(side=LEFT, padx=10)
         
-        # Кнопки
+        # Buttons
         button_frame = ttk.Frame(self)
         button_frame.pack(fill=X, padx=50, pady=20)
         
@@ -140,7 +140,7 @@ class ProfileFrame(ttk.Frame):
         )
         cancel_button.pack(side=RIGHT, padx=5)
         
-        # Інформація про розрахунок
+        # Calculation information
         info_frame = ttk.Frame(self)
         info_frame.pack(fill=X, padx=50, pady=20)
         
@@ -160,31 +160,31 @@ class ProfileFrame(ttk.Frame):
         info_label.pack(fill=X, pady=5)
     
     def load_profile(self):
-        """Завантажує дані профілю, якщо вони існують."""
+        """Loads profile data if it exists."""
         try:
             profile = self.profile_service.get_profile()
             
             if profile:
-                # Встановлюємо значення полів
+                # Set field values
                 self.height_var.set(profile.height_cm)
                 self.weight_var.set(profile.weight_kg)
                 self.age_var.set(profile.age_years)
                 self.gender_var.set(profile.gender.name)
-            # Якщо профіль не знайдено, залишаємо значення за замовчуванням
+            # If profile not found, keep default values
         except Exception as e:
-            # Якщо виникла помилка, залишаємо значення за замовчуванням
-            print(f"Помилка при завантаженні профілю: {e}")
+            # If error occurred, keep default values
+            print(f"Error loading profile: {e}")
     
     def save_profile(self):
-        """Зберігає профіль користувача."""
+        """Saves user profile."""
         try:
-            # Отримуємо значення з полів
+            # Get values from fields
             height = self.height_var.get()
             weight = self.weight_var.get()
             age = self.age_var.get()
             gender = self.gender_var.get()
             
-            # Валідація введених даних
+            # Validate input data
             if height <= 0 or weight <= 0 or age <= 0:
                 ttk.Messagebox.show_error(
                     title="Invalid Input",
@@ -192,10 +192,10 @@ class ProfileFrame(ttk.Frame):
                 )
                 return
             
-            # Зберігаємо профіль
+            # Save profile
             self.profile_service.create_profile(height, weight, age, gender)
             
-            # Викликаємо callback
+            # Call callback
             self.on_profile_updated()
             
         except Exception as e:
