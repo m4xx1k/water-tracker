@@ -7,70 +7,100 @@
   },
   "water_logs": [
     {
-      "amount_ml": 250,
-      "timestamp": 1749338037.310218,
+      "amount_ml": 350,
+      "timestamp": 1749339121.0529,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338038.0923095,
+      "amount_ml": 350,
+      "timestamp": 1749339371.743268,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338038.311205,
+      "amount_ml": 350,
+      "timestamp": 1749339371.9021008,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338038.7605484,
+      "amount_ml": 350,
+      "timestamp": 1749339372.0783648,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338039.2541044,
+      "amount_ml": 350,
+      "timestamp": 1749339372.253823,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338039.5455794,
+      "amount_ml": 350,
+      "timestamp": 1749339372.4314594,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338039.7072663,
+      "amount_ml": 350,
+      "timestamp": 1749339372.6070087,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338039.9127085,
+      "amount_ml": 350,
+      "timestamp": 1749339372.767893,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338040.1404955,
+      "amount_ml": 350,
+      "timestamp": 1749339372.9476194,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338040.5919976,
+      "amount_ml": 350,
+      "timestamp": 1749339373.1184523,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338041.1705642,
+      "amount_ml": 350,
+      "timestamp": 1749339373.3422832,
       "note": "Quick add"
     },
     {
-      "amount_ml": 250,
-      "timestamp": 1749338041.7815862,
+      "amount_ml": 500,
+      "timestamp": 1749339376.510227,
       "note": "Quick add"
     },
     {
-      "amount_ml": 100,
-      "timestamp": 1749338043.6785789,
+      "amount_ml": 500,
+      "timestamp": 1749339376.6789937,
+      "note": "Quick add"
+    },
+    {
+      "amount_ml": 500,
+      "timestamp": 1749339376.837821,
+      "note": "Quick add"
+    },
+    {
+      "amount_ml": 500,
+      "timestamp": 1749339377.0283985,
+      "note": "Quick add"
+    },
+    {
+      "amount_ml": 500,
+      "timestamp": 1749339377.219672,
+      "note": "Quick add"
+    },
+    {
+      "amount_ml": 500,
+      "timestamp": 1749339377.382976,
+      "note": "Quick add"
+    },
+    {
+      "amount_ml": 500,
+      "timestamp": 1749339377.5538757,
+      "note": "Quick add"
+    },
+    {
+      "amount_ml": 500,
+      "timestamp": 1749339377.7442322,
       "note": "Quick add"
     }
   ],
-  "checksum": "b293b0be7de212483f9bc12b5edcb74f095956e6e41b2d51136fee754067eba0"
+  "checksum": "7824237272339437b0159e29fcc1d286768dc8bca84ec27fb01e1e90b39fb303"
 }
