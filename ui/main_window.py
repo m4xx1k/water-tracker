@@ -29,7 +29,7 @@ class MainWindow(ttk.Window):
         self.water_log_service = WaterLogService(self.data_store, self.profile_service)
         
         # Window configuration
-        self.geometry("800x600")
+        self.geometry("860x600")
         self.position_center()
         
         # Create menu
@@ -53,6 +53,8 @@ class MainWindow(ttk.Window):
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="Export Data...", command=self.export_data)
         file_menu.add_command(label="Import Data...", command=self.import_data)
+        file_menu.add_separator()
+        file_menu.add_command(label="Clear All Data", command=self.clear_all_data)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
@@ -199,4 +201,49 @@ class MainWindow(ttk.Window):
             "Water Tracker v0.1.0\n\n"
             "A simple water tracking application.\n\n"
             "Created with Python and ttkbootstrap."
-        ) 
+        )
+    
+    def clear_all_data(self):
+        """Clears all application data after confirmation."""
+        # Ask for confirmation
+        result = messagebox.askquestion(
+            "Clear All Data",
+            "⚠️ WARNING: This will delete ALL data including your profile and water logs.\n\n"
+            "Are you sure you want to continue?",
+            icon='warning'
+        )
+        
+        if result != 'yes':
+            return
+        
+        # Second confirmation for extra safety
+        result = messagebox.askquestion(
+            "Confirm Data Deletion",
+            "⚠️ This action cannot be undone!\n\n"
+            "Are you absolutely sure you want to delete all your data?",
+            icon='warning'
+        )
+        
+        if result != 'yes':
+            return
+        
+        # Clear all data
+        try:
+            # Clear data store
+            self.data_store.clear_all_data()
+            
+            # Show success message
+            messagebox.showinfo(
+                "Data Cleared",
+                "All data has been successfully cleared.\n"
+                "You will now be redirected to create a new profile."
+            )
+            
+            # Redirect to profile creation
+            self.show_profile_frame()
+            
+        except Exception as e:
+            messagebox.showerror(
+                "Error",
+                f"Failed to clear data: {str(e)}"
+            ) 
