@@ -1,3 +1,3 @@
 """
-Модуль моделей даних для додатку Water Tracker.
+Data models module for the Water Tracker application.
 """ 

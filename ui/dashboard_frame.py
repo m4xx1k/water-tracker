@@ -1,5 +1,5 @@
 """
-Фрейм панелі стану для відображення поточного прогресу вживання води.
+Dashboard frame for displaying current water consumption progress.
 """
 
 import time
@@ -15,23 +15,23 @@ from services.water_log_service import WaterLogService
 
 
 class CircularMeter(ttk.Frame):
-    """Віджет для відображення кругового прогрес-бару."""
+    """Widget for displaying circular progress bar."""
     
     def __init__(self, parent, **kwargs):
         """
-        Ініціалізує круговий індикатор прогресу.
+        Initializes circular progress indicator.
         
         Args:
-            parent: Батьківський віджет.
-            **kwargs: Додаткові параметри.
+            parent: Parent widget.
+            **kwargs: Additional parameters.
         """
         super().__init__(parent, **kwargs)
         
-        # Розміри канвасу
+        # Canvas dimensions
         self.size = 200
-        self.width = 20  # Товщина лінії
+        self.width = 20  # Line thickness
         
-        # Канвас для малювання
+        # Canvas for drawing
         self.canvas = tk.Canvas(
             self, 
             width=self.size, 
@@ -41,7 +41,7 @@ class CircularMeter(ttk.Frame):
         )
         self.canvas.pack()
         
-        # Створення дуги
+        # Create arc
         self.meter_arc = self.canvas.create_arc(
             self.width, self.width, 
             self.size - self.width, self.size - self.width,
@@ -49,7 +49,7 @@ class CircularMeter(ttk.Frame):
             style=tk.ARC, outline="#ddd", width=self.width
         )
         
-        # Заповнення
+        # Fill
         self.meter_indicator = self.canvas.create_arc(
             self.width, self.width, 
             self.size - self.width, self.size - self.width,
@@ -57,14 +57,14 @@ class CircularMeter(ttk.Frame):
             style=tk.ARC, outline="#007BFF", width=self.width
         )
         
-        # Текст з відсотками
+        # Percentage text
         self.percent_text = self.canvas.create_text(
             self.size / 2, self.size / 2,
             text="0%",
             font=("TkDefaultFont", 20, "bold")
         )
         
-        # Початкове значення
+        # Initial value
         self.set_value(0)
     
     def set_value(self, value: float):

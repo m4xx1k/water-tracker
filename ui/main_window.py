@@ -1,5 +1,5 @@
 """
-Головне вікно програми.
+Main application window.
 """
 
 import tkinter as tk
@@ -17,39 +17,39 @@ from services.water_log_service import WaterLogService
 
 
 class MainWindow(ttk.Window):
-    """Головне вікно програми."""
+    """Main application window."""
     
     def __init__(self):
-        """Ініціалізує головне вікно програми."""
+        """Initializes the main application window."""
         super().__init__(title="Water Tracker", themename="cosmo", resizable=(False, False))
         
-        # Ініціалізація сервісів
+        # Initialize services
         self.data_store = DataStore()
         self.profile_service = ProfileService(self.data_store)
         self.water_log_service = WaterLogService(self.data_store, self.profile_service)
         
-        # Налаштування вікна
+        # Window configuration
         self.geometry("800x600")
         self.position_center()
         
-        # Створення меню
+        # Create menu
         self.create_menu()
         
-        # Основний контейнер
+        # Main container
         self.main_container = ttk.Frame(self)
         self.main_container.pack(fill=BOTH, expand=YES, padx=10, pady=10)
         
-        # Створення фреймів
+        # Create frames
         self.create_frames()
         
-        # Встановлення початкового стану інтерфейсу
+        # Set initial interface state
         self.check_profile()
     
     def create_menu(self):
-        """Створює головне меню програми."""
+        """Creates the main application menu."""
         menu_bar = tk.Menu(self)
         
-        # Меню "Файл"
+        # File menu
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="Export Data...", command=self.export_data)
         file_menu.add_command(label="Import Data...", command=self.import_data)
@@ -57,18 +57,18 @@ class MainWindow(ttk.Window):
         file_menu.add_command(label="Exit", command=self.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
         
-        # Меню "Профіль"
+        # Profile menu
         profile_menu = tk.Menu(menu_bar, tearoff=0)
         profile_menu.add_command(label="Create/Edit Profile", command=self.show_profile_frame)
         menu_bar.add_cascade(label="Profile", menu=profile_menu)
         
-        # Меню "Вигляд"
+        # View menu
         view_menu = tk.Menu(menu_bar, tearoff=0)
         view_menu.add_command(label="Dashboard", command=self.show_dashboard_frame)
         view_menu.add_command(label="History", command=self.show_history_frame)
         menu_bar.add_cascade(label="View", menu=view_menu)
         
-        # Меню "Довідка"
+        # Help menu
         help_menu = tk.Menu(menu_bar, tearoff=0)
         help_menu.add_command(label="About", command=self.show_about)
         menu_bar.add_cascade(label="Help", menu=help_menu)
@@ -76,22 +76,22 @@ class MainWindow(ttk.Window):
         self.config(menu=menu_bar)
     
     def create_frames(self):
-        """Створює основні фрейми програми."""
-        # Фрейм профілю
+        """Creates the main application frames."""
+        # Profile frame
         self.profile_frame = ProfileFrame(
             self.main_container, 
             self.profile_service,
             on_profile_updated=self.on_profile_updated
         )
         
-        # Фрейм панелі стану
+        # Dashboard frame
         self.dashboard_frame = DashboardFrame(
             self.main_container, 
             self.profile_service,
             self.water_log_service
         )
         
-        # Фрейм історії
+        # History frame
         self.history_frame = HistoryFrame(
             self.main_container, 
             self.water_log_service,
@@ -99,30 +99,30 @@ class MainWindow(ttk.Window):
         )
     
     def check_profile(self):
-        """Перевіряє наявність профілю та показує відповідний фрейм."""
+        """Checks for profile existence and shows the appropriate frame."""
         if self.profile_service.has_profile():
             self.show_dashboard_frame()
         else:
-            # Показуємо фрейм створення профілю без виведення помилок
+            # Show profile creation frame without error messages
             self.show_profile_frame()
             messagebox.showinfo(
-                "Вітаємо", 
-                "Вітаємо у Water Tracker! Будь ласка, створіть свій профіль для початку роботи."
+                "Welcome", 
+                "Welcome to Water Tracker! Please create your profile to get started."
             )
     
     def show_profile_frame(self):
-        """Показує фрейм профілю."""
+        """Shows the profile frame."""
         self.hide_all_frames()
-        self.profile_frame.load_profile()  # Завантажуємо поточний профіль, якщо є
+        self.profile_frame.load_profile()  # Load current profile if exists
         self.profile_frame.pack(fill=BOTH, expand=YES)
     
     def show_dashboard_frame(self):
-        """Показує фрейм панелі стану."""
+        """Shows the dashboard frame."""
         if not self.profile_service.has_profile():
-            # Показуємо фрейм створення профілю без виведення помилок
+            # Show profile creation frame without error messages
             messagebox.showinfo(
-                "Створіть профіль", 
-                "Спочатку потрібно створити профіль користувача."
+                "Create Profile", 
+                "You need to create a user profile first."
             )
             self.show_profile_frame()
             return
@@ -132,12 +132,12 @@ class MainWindow(ttk.Window):
         self.dashboard_frame.pack(fill=BOTH, expand=YES)
     
     def show_history_frame(self):
-        """Показує фрейм історії."""
+        """Shows the history frame."""
         if not self.profile_service.has_profile():
-            # Показуємо фрейм створення профілю без виведення помилок
+            # Show profile creation frame without error messages
             messagebox.showinfo(
-                "Створіть профіль", 
-                "Спочатку потрібно створити профіль користувача."
+                "Create Profile", 
+                "You need to create a user profile first."
             )
             self.show_profile_frame()
             return
@@ -147,20 +147,20 @@ class MainWindow(ttk.Window):
         self.history_frame.pack(fill=BOTH, expand=YES)
     
     def hide_all_frames(self):
-        """Приховує всі фрейми."""
+        """Hides all frames."""
         for frame in (self.profile_frame, self.dashboard_frame, self.history_frame):
             frame.pack_forget()
     
     def on_profile_updated(self):
-        """Обробник події оновлення профілю."""
+        """Profile update event handler."""
         self.show_dashboard_frame()
     
     def refresh_dashboard(self):
-        """Оновлює дані на панелі стану."""
+        """Refreshes dashboard data."""
         self.dashboard_frame.refresh()
     
     def export_data(self):
-        """Експортує дані у файл."""
+        """Exports data to a file."""
         file_path = filedialog.asksaveasfilename(
             defaultextension=".json",
             filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
@@ -176,7 +176,7 @@ class MainWindow(ttk.Window):
             messagebox.showerror("Export Failed", "Failed to export data.")
     
     def import_data(self):
-        """Імпортує дані з файлу."""
+        """Imports data from a file."""
         file_path = filedialog.askopenfilename(
             filetypes=[("JSON files", "*.json"), ("All files", "*.*")],
             title="Import Data"
@@ -187,13 +187,13 @@ class MainWindow(ttk.Window):
         
         if self.data_store.import_data(file_path):
             messagebox.showinfo("Import Successful", "Data imported successfully.")
-            # Оновлюємо інтерфейс
+            # Update interface
             self.check_profile()
         else:
             messagebox.showerror("Import Failed", "Failed to import data.")
     
     def show_about(self):
-        """Показує інформацію про програму."""
+        """Shows information about the application."""
         messagebox.showinfo(
             "About Water Tracker",
             "Water Tracker v0.1.0\n\n"

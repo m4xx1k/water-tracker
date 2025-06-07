@@ -1,3 +1,3 @@
 """
-Модуль сервісів для обробки бізнес-логіки додатку Water Tracker.
+Services module for handling business logic of the Water Tracker application.
 """ 

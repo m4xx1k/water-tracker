@@ -1,3 +1,3 @@
 """
-Модуль утилітних функцій для додатку Water Tracker.
+Utility functions module for the Water Tracker application.
 """ 
