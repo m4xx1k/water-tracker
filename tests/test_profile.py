@@ -1,5 +1,5 @@
 """
-Тести для моделі профілю користувача.
+Tests for user profile model.
 """
 
 import pytest
@@ -7,14 +7,14 @@ from model.profile import Profile, Gender
 
 
 def test_gender_bonus():
-    """Тест розрахунку бонусного коефіцієнта для різних статей."""
+    """Test bonus coefficient calculation for different genders."""
     assert Gender.MALE.get_bonus() == 0.25
     assert Gender.FEMALE.get_bonus() == 0.1
     assert Gender.OTHER.get_bonus() == 0.15
 
 
 def test_daily_target_male():
-    """Тест розрахунку денної норми води для чоловіків."""
+    """Test daily water norm calculation for males."""
     profile = Profile(
         height_cm=180,
         weight_kg=80.0,

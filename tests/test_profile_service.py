@@ -1,6 +1,3 @@
-"""
-Тести для сервісу профілю користувача.
-"""
 
 import pytest
 from unittest.mock import MagicMock
@@ -11,7 +8,6 @@ from services.profile_service import ProfileService
 
 @pytest.fixture
 def mock_data_store():
-    """Фікстура для створення моку сховища даних."""
     data_store = MagicMock(spec=DataStore)
     
     # Налаштування поведінки моку
@@ -28,11 +24,8 @@ def mock_data_store():
 
 
 def test_get_profile(mock_data_store):
-    """Тест отримання профілю користувача."""
-    # Створення сервісу з моком сховища
     profile_service = ProfileService(mock_data_store)
     
-    # Перевірка отримання профілю
     profile = profile_service.get_profile()
     assert profile is not None
     assert profile.height_cm == 180
@@ -40,7 +33,6 @@ def test_get_profile(mock_data_store):
     assert profile.age_years == 30
     assert profile.gender == Gender.MALE
     
-    # Перевірка виклику методу сховища
     mock_data_store.load_profile.assert_called_once()
 
 

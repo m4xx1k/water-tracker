@@ -48,7 +48,7 @@ class ModernCircularMeter(ttk.Frame):
         )
         self.canvas.pack()
         
-        # Background circle - змінюємо на arc для однакової товщини з прогрес-дугою
+        # Background circle - change to arc for consistent thickness with progress arc
         self.bg_circle = self.canvas.create_arc(
             self.width//2, self.width//2, 
             self.size - self.width//2, self.size - self.width//2,
@@ -58,7 +58,7 @@ class ModernCircularMeter(ttk.Frame):
             width=self.width
         )
         
-        # Потім малюємо менше коло в центрі з кольором фону canvas
+        # Then draw a smaller circle in the center with the canvas background color
         inner_size = self.size - self.width*2
         self.inner_circle = self.canvas.create_oval(
             self.size//2 - inner_size//2, self.size//2 - inner_size//2,
@@ -67,7 +67,7 @@ class ModernCircularMeter(ttk.Frame):
             outline=""
         )
         
-        # Тепер прогрес-дуга буде видима на фоні кільця
+        # Now the progress arc will be visible against the ring background
         self.progress_arc = self.canvas.create_arc(
             self.width//2, self.width//2, 
             self.size - self.width//2, self.size - self.width//2,
@@ -143,7 +143,7 @@ class ModernCircularMeter(ttk.Frame):
             color = self.progress_color
             status = "Start!"
         
-        # Змінюємо outline колір для ARC стилю
+        # Change outline color for ARC style
         self.canvas.itemconfig(self.progress_arc, outline=color)
         
         # Update text
@@ -245,7 +245,7 @@ class WaterLogDialog(tk.Toplevel):
         )
         note_entry.pack(fill=X)
         
-        # Додаємо підказку про кількість символів
+        # Add a hint about the number of characters
         char_count = ttk.Label(note_frame, text="0/48", font=("TkDefaultFont", 8), foreground="#6c757d")
         char_count.pack(anchor=E, pady=(2, 0))
         
