@@ -9,7 +9,7 @@ from model.profile import Profile, Gender
 def test_gender_bonus():
     """Тест розрахунку бонусного коефіцієнта для різних статей."""
     assert Gender.MALE.get_bonus() == 0.25
-    assert Gender.FEMALE.get_bonus() == 0.0
+    assert Gender.FEMALE.get_bonus() == 0.1
     assert Gender.OTHER.get_bonus() == 0.15
 
 
@@ -39,7 +39,7 @@ def test_daily_target_female():
     )
     
     # Розрахунок очікуваного результату
-    expected = round(((0.035 * 60.0) + (0.002 * 165) - (0.0002 * 25) + 0.0) * 1000)
+    expected = round(((0.035 * 60.0) + (0.002 * 165) - (0.0002 * 25) + 0.1) * 1000)
     
     assert profile.daily_target_ml == expected
 

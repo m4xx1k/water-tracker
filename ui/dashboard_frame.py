@@ -234,25 +234,25 @@ class WaterLogDialog(tk.Toplevel):
         note_frame = ttk.Frame(main_frame)
         note_frame.pack(fill=X, pady=(0, 20))
         
-        ttk.Label(note_frame, text="Note (optional, max 36 characters):", font=("TkDefaultFont", 10)).pack(anchor=W, pady=(0, 5))
+        ttk.Label(note_frame, text="Note (optional, max 48 characters):", font=("TkDefaultFont", 10)).pack(anchor=W, pady=(0, 5))
         
         note_entry = ttk.Entry(
             note_frame, 
             textvariable=self.note_var,
             font=("TkDefaultFont", 11),
             validate="key",
-            validatecommand=(self.register(lambda text: len(text) <= 36), '%P')
+            validatecommand=(self.register(lambda text: len(text) <= 48), '%P')
         )
         note_entry.pack(fill=X)
         
         # Додаємо підказку про кількість символів
-        char_count = ttk.Label(note_frame, text="0/36", font=("TkDefaultFont", 8), foreground="#6c757d")
+        char_count = ttk.Label(note_frame, text="0/48", font=("TkDefaultFont", 8), foreground="#6c757d")
         char_count.pack(anchor=E, pady=(2, 0))
         
         # Оновлюємо лічильник при зміні тексту
         def update_char_count(*args):
             current_len = len(self.note_var.get())
-            char_count.config(text=f"{current_len}/36")
+            char_count.config(text=f"{current_len}/48")
         
         self.note_var.trace_add("write", update_char_count)
         
@@ -556,11 +556,8 @@ class DashboardFrame(ttk.Frame):
         # Get recent logs
         logs = self.water_log_service.get_water_logs()
         
-        if not logs:
-            # Show empty state
-            self.logs_tree.insert("", "end", values=("--:--", "🏜️ Поки пусто"))
-            self.logs_tree.insert("", "end", values=("Додай!", "💧 Першу воду"))
-        else:
+        
+        if logs:
             # Sort logs by timestamp (newest first) and show last 10
             sorted_logs = sorted(logs, key=lambda x: x[1].timestamp, reverse=True)[:10]
             

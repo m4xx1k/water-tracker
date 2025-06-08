@@ -18,7 +18,7 @@ class Gender(Enum):
         if self == Gender.MALE:
             return 0.25
         elif self == Gender.FEMALE:
-            return 0.0
+            return 0.1
         else:  # OTHER
             return 0.15
 

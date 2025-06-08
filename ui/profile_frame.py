@@ -147,7 +147,7 @@ class ProfileFrame(ttk.Frame):
         info_text = (
             "Daily water intake target is calculated using the formula:\n"
             "((0.035*weight)+(0.002*height)-(0.0002*age)+gender_bonus)*1000\n\n"
-            "Gender bonus factors: Male = 0.25, Female = 0.0, Other = 0.15"
+            "Gender bonus factors: Male = 0.25, Female = 0.1, Other = 0.15"
         )
         
         info_label = ttk.Label(
