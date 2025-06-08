@@ -1,5 +1,5 @@
 """
-Сервіс для роботи з профілем користувача.
+Service for working with user profile.
 """
 
 from model.profile import Profile, Gender
@@ -7,44 +7,44 @@ from repository.data_store import DataStore
 
 
 class ProfileService:
-    """Сервіс для роботи з профілем користувача."""
+    """Service for working with user profile."""
     
     def __init__(self, data_store: DataStore):
         """
-        Ініціалізує сервіс профілю.
+        Initializes the profile service.
         
         Args:
-            data_store: Об'єкт сховища даних.
+            data_store: Data storage object.
         """
         self.data_store = data_store
     
     def get_profile(self):
         """
-        Отримує профіль користувача.
+        Retrieves the user profile.
         
         Returns:
-            Об'єкт профілю користувача або None, якщо профіль не знайдено.
+            User profile object or None if not found.
         """
         return self.data_store.load_profile()
     
-    def create_profile(self, height_cm: int, weight_kg: float, 
+    def create_profile(self, height_cm: int, weight_kg: float,
                      age_years: int, gender: str) -> Profile:
         """
-        Створює новий профіль користувача.
+        Creates a new user profile.
         
         Args:
-            height_cm: Зріст у сантиметрах.
-            weight_kg: Вага у кілограмах.
-            age_years: Вік у роках.
-            gender: Стать користувача ('MALE', 'FEMALE', 'OTHER').
+            height_cm: Height in centimeters.
+            weight_kg: Weight in kilograms.
+            age_years: Age in years.
+            gender: User gender ('MALE', 'FEMALE', 'OTHER').
             
         Returns:
-            Створений об'єкт профілю.
+            Created profile object.
             
         Raises:
-            ValueError: Якщо вхідні дані некоректні.
+            ValueError: If input data is invalid.
         """
-        # Валідація вхідних даних
+        # Input data validation
         if height_cm <= 0:
             raise ValueError("Height must be greater than 0 cm.")
         if weight_kg <= 0:
@@ -57,7 +57,7 @@ class ProfileService:
         except (KeyError, AttributeError):
             raise ValueError(f"Invalid gender. Must be one of: {', '.join([g.name for g in Gender])}.")
         
-        # Створення профілю
+        # Create profile
         profile = Profile(
             height_cm=height_cm,
             weight_kg=weight_kg,
@@ -65,47 +65,47 @@ class ProfileService:
             gender=gender_enum
         )
         
-        # Збереження профілю
+        # Save profile
         if not self.data_store.save_profile(profile):
             raise RuntimeError("Failed to save profile.")
         
         return profile
     
-    def update_profile(self, height_cm: int, weight_kg: float, 
+    def update_profile(self, height_cm: int, weight_kg: float,
                       age_years: int, gender: str) -> Profile:
         """
-        Оновлює профіль користувача.
+        Updates user profile.
         
         Args:
-            height_cm: Зріст у сантиметрах.
-            weight_kg: Вага у кілограмах.
-            age_years: Вік у роках.
-            gender: Стать користувача ('MALE', 'FEMALE', 'OTHER').
+            height_cm: Height in centimeters.
+            weight_kg: Weight in kilograms.
+            age_years: Age in years.
+            gender: User gender ('MALE', 'FEMALE', 'OTHER').
             
         Returns:
-            Оновлений об'єкт профілю.
+            Updated profile object.
             
         Raises:
-            ValueError: Якщо вхідні дані некоректні.
+            ValueError: If input data is invalid.
         """
-        # Створюємо новий профіль з оновленими даними
+        # Create new profile with updated data
         return self.create_profile(height_cm, weight_kg, age_years, gender)
     
     def has_profile(self) -> bool:
         """
-        Перевіряє чи створений профіль користувача.
+        Checks if user profile exists.
         
         Returns:
-            True, якщо профіль створений, інакше False.
+            True if profile exists, otherwise False.
         """
         return self.data_store.load_profile() is not None
     
     def get_daily_target(self) -> int:
         """
-        Отримує денну норму води.
+        Gets daily water target.
         
         Returns:
-            Денна норма води в мілілітрах або 0, якщо профіль не знайдено.
+            Daily water target in milliliters or 0 if profile not found.
         """
         profile = self.get_profile()
         if not profile:

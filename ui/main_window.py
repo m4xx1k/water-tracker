@@ -216,17 +216,6 @@ class MainWindow(ttk.Window):
         if result != 'yes':
             return
         
-        # Second confirmation for extra safety
-        result = messagebox.askquestion(
-            "Confirm Data Deletion",
-            "⚠️ This action cannot be undone!\n\n"
-            "Are you absolutely sure you want to delete all your data?",
-            icon='warning'
-        )
-        
-        if result != 'yes':
-            return
-        
         # Clear all data
         try:
             # Clear data store

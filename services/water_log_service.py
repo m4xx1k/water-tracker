@@ -1,5 +1,5 @@
 """
-Сервіс для роботи з записами про вживання води.
+Service for managing water consumption records.
 """
 
 import time
@@ -12,45 +12,45 @@ from services.profile_service import ProfileService
 
 
 class WaterLogService:
-    """Сервіс для роботи з записами про вживання води."""
+    """Service for managing water consumption records."""
     
     def __init__(self, data_store: DataStore, profile_service: ProfileService):
         """
-        Ініціалізує сервіс записів про вживання води.
+        Initializes the water log service.
         
         Args:
-            data_store: Об'єкт сховища даних.
-            profile_service: Сервіс профілю користувача.
+            data_store: Data storage object.
+            profile_service: User profile service.
         """
         self.data_store = data_store
         self.profile_service = profile_service
     
     def add_water_log(self, amount_ml: int, note: Optional[str] = None) -> WaterLog:
         """
-        Додає новий запис про вживання води.
+        Adds a new water consumption record.
         
         Args:
-            amount_ml: Кількість випитої води в мілілітрах.
-            note: Примітка до запису.
+            amount_ml: Amount of water consumed in milliliters.
+            note: Note for the record.
             
         Returns:
-            Створений об'єкт запису.
+            Created water log object.
             
         Raises:
-            ValueError: Якщо вхідні дані некоректні.
+            ValueError: If input data is invalid.
         """
-        # Валідація вхідних даних
+        # Validate input data
         if amount_ml <= 0:
             raise ValueError("Amount must be greater than 0 ml.")
         
-        # Створення запису
+        # Create record
         water_log = WaterLog(
             amount_ml=amount_ml,
             timestamp=time.time(),
             note=note
         )
         
-        # Збереження запису
+        # Save record
         if not self.data_store.add_water_log(water_log):
             raise RuntimeError("Failed to save water log.")
         
@@ -59,39 +59,39 @@ class WaterLogService:
     def update_water_log(self, index: int, amount_ml: int, 
                         note: Optional[str] = None) -> WaterLog:
         """
-        Оновлює запис про вживання води.
+        Updates a water consumption record.
         
         Args:
-            index: Індекс запису.
-            amount_ml: Нова кількість випитої води в мілілітрах.
-            note: Нова примітка до запису.
+            index: Record index.
+            amount_ml: New amount of water consumed in milliliters.
+            note: New note for the record.
             
         Returns:
-            Оновлений об'єкт запису.
+            Updated water log object.
             
         Raises:
-            ValueError: Якщо вхідні дані некоректні.
-            IndexError: Якщо індекс за межами діапазону.
+            ValueError: If input data is invalid.
+            IndexError: If index is out of range.
         """
-        # Валідація вхідних даних
+        # Validate input data
         if amount_ml <= 0:
             raise ValueError("Amount must be greater than 0 ml.")
         
-        # Отримання поточного запису
+        # Retrieve current record
         logs = self.data_store.get_water_logs()
         if index < 0 or index >= len(logs):
             raise IndexError(f"Log index {index} out of range.")
         
         _, current_log = logs[index]
         
-        # Створення оновленого запису
+        # Create updated record
         updated_log = WaterLog(
             amount_ml=amount_ml,
             timestamp=current_log.timestamp,
             note=note
         )
         
-        # Збереження оновленого запису
+        # Save updated record
         if not self.data_store.update_water_log(index, updated_log):
             raise RuntimeError("Failed to update water log.")
         
@@ -99,91 +99,91 @@ class WaterLogService:
     
     def delete_water_log(self, index: int) -> None:
         """
-        Видаляє запис про вживання води.
+        Deletes a water consumption record.
         
         Args:
-            index: Індекс запису.
+            index: Record index.
             
         Raises:
-            IndexError: Якщо індекс за межами діапазону.
+            IndexError: If index is out of range.
         """
-        # Перевірка існування запису
+        # Check if record exists
         logs = self.data_store.get_water_logs()
         if index < 0 or index >= len(logs):
             raise IndexError(f"Log index {index} out of range.")
         
-        # Видалення запису
+        # Delete record
         if not self.data_store.delete_water_log(index):
             raise RuntimeError("Failed to delete water log.")
     
     def get_water_logs(self, days: int = 1) -> List[Tuple[int, WaterLog]]:
         """
-        Отримує список записів про вживання води за вказаний період.
+        Retrieves a list of water consumption records for the specified period.
         
         Args:
-            days: Кількість днів для виборки (за замовчуванням - 1 день).
+            days: Number of days to retrieve (default is 1 day).
             
         Returns:
-            Список кортежів (індекс, запис) про вживання води.
+            List of tuples (index, water log) of water consumption records.
         """
-        # Розрахунок часового періоду
+        # Calculate time period
         end_time = time.time()
         start_time = end_time - (days * 24 * 60 * 60)  # days to seconds
         
-        # Отримання записів
+        # Retrieve records
         return self.data_store.get_water_logs(start_time, end_time)
     
     def get_water_logs_by_range(self, start_date: datetime, 
                                end_date: datetime) -> List[Tuple[int, WaterLog]]:
         """
-        Отримує список записів про вживання води за вказаний діапазон дат.
+        Retrieves a list of water consumption records for the specified date range.
         
         Args:
-            start_date: Початкова дата.
-            end_date: Кінцева дата.
+            start_date: Start date.
+            end_date: End date.
             
         Returns:
-            Список кортежів (індекс, запис) про вживання води.
+            List of tuples (index, water log) of water consumption records.
         """
-        # Перетворення дат в Unix timestamp
-        # Додаємо 1 день до кінцевої дати, щоб включити її в період
+        # Convert dates to Unix timestamp
+        # Add 1 day to the end date to include it in the range
         end_date = end_date + timedelta(days=1)
         
         start_time = start_date.timestamp()
         end_time = end_date.timestamp()
         
-        # Отримання записів
+        # Retrieve records
         return self.data_store.get_water_logs(start_time, end_time)
     
     def get_daily_consumption(self) -> int:
         """
-        Отримує загальне споживання води за поточний день.
+        Retrieves total water consumption for the current day.
         
         Returns:
-            Кількість випитої води в мілілітрах.
+            Amount of water consumed in milliliters.
         """
-        # Отримуємо записи за поточний день
+        # Retrieve records for the current day
         logs = self.get_water_logs(days=1)
         
-        # Підсумовуємо кількість води
+        # Sum the amount of water
         return sum(log.amount_ml for _, log in logs)
     
     def get_progress_percentage(self) -> float:
         """
-        Розраховує відсоток виконання денної норми води.
+        Calculates the percentage of daily water target achieved.
         
         Returns:
-            Відсоток виконання (від 0.0 до 1.0).
+            Percentage of target achieved (from 0.0 to 1.0).
         """
-        # Отримуємо денну норму води
+        # Retrieve daily water target
         daily_target = self.profile_service.get_daily_target()
         
-        # Якщо профіль відсутній або норма води = 0
+        # If profile is missing or target is 0
         if daily_target == 0:
             return 0.0
         
-        # Отримуємо поточне споживання
+        # Retrieve current consumption
         current_consumption = self.get_daily_consumption()
         
-        # Розраховуємо відсоток
+        # Calculate percentage
         return min(1.0, current_consumption / daily_target) 

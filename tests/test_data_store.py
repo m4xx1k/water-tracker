@@ -1,6 +1,3 @@
-"""
-Тести для сховища даних.
-"""
 
 import os
 import json
@@ -12,7 +9,6 @@ from repository.data_store import DataStore
 
 @pytest.fixture
 def temp_data_file():
-    """Фікстура для створення тимчасового файлу даних."""
     fd, path = tempfile.mkstemp(suffix=".json")
     os.close(fd)
     yield path
@@ -20,7 +16,7 @@ def temp_data_file():
 
 
 def test_init_data_store():
-    """Тест ініціалізації сховища даних."""
+    """Test data store initialization."""
     data_store = DataStore("nonexistent.json")
     assert data_store.data["profile"] is None
     assert data_store.data["water_logs"] == []
@@ -28,18 +24,18 @@ def test_init_data_store():
 
 
 def test_save_and_load(temp_data_file):
-    """Тест збереження та завантаження даних."""
-    # Створення та збереження даних
+    """Test saving and loading data."""
+    # Create and save data
     data_store = DataStore(temp_data_file)
     data_store.data["profile"] = {"height_cm": 180, "weight_kg": 80.0, "age_years": 30, "gender": "MALE"}
     data_store.data["water_logs"] = [{"amount_ml": 250, "timestamp": 1622548800.0, "note": "Morning"}]
     
-    # Перевірка збереження
+    # Check saving
     assert data_store.save() is True
     
-    # Перевірка, що файл створено
+    # Check if file is created
     assert os.path.exists(temp_data_file)
-    
+
     # Завантаження даних в новий об'єкт
     data_store2 = DataStore(temp_data_file)
     assert data_store2.data["profile"] == {"height_cm": 180, "weight_kg": 80.0, "age_years": 30, "gender": "MALE"}
@@ -48,17 +44,17 @@ def test_save_and_load(temp_data_file):
 
 
 def test_checksum_verification(temp_data_file):
-    """Тест перевірки контрольної суми."""
-    # Створення та збереження даних
+    """Test checksum verification."""
+    # Create and save data
     data_store = DataStore(temp_data_file)
     data_store.data["profile"] = {"height_cm": 180, "weight_kg": 80.0, "age_years": 30, "gender": "MALE"}
     data_store.save()
     
-    # Завантаження даних
+    # Load data
     data_store2 = DataStore(temp_data_file)
     assert data_store2.data["profile"] == {"height_cm": 180, "weight_kg": 80.0, "age_years": 30, "gender": "MALE"}
     
-    # Псування контрольної суми у файлі
+    # Corrupt checksum in file
     with open(temp_data_file, 'r') as f:
         data = json.load(f)
     
@@ -67,7 +63,7 @@ def test_checksum_verification(temp_data_file):
     with open(temp_data_file, 'w') as f:
         json.dump(data, f)
     
-    # Спроба завантажити дані з невірною контрольною сумою
+    # Try to load data with invalid checksum
     data_store3 = DataStore(temp_data_file)
     assert data_store3.load() is False
 
@@ -76,7 +72,7 @@ def test_profile_operations(temp_data_file):
     """Тест операцій з профілем користувача."""
     data_store = DataStore(temp_data_file)
     
-    # Створення профілю
+    # Create profile
     profile = Profile(
         height_cm=180,
         weight_kg=80.0,
@@ -84,10 +80,8 @@ def test_profile_operations(temp_data_file):
         gender=Gender.MALE
     )
     
-    # Збереження профілю
     assert data_store.save_profile(profile) is True
     
-    # Завантаження профілю
     loaded_profile = data_store.load_profile()
     assert loaded_profile is not None
     assert loaded_profile.height_cm == 180
@@ -97,52 +91,52 @@ def test_profile_operations(temp_data_file):
 
 
 def test_water_log_operations(temp_data_file):
-    """Тест операцій з записами про вживання води."""
+    """Test water log operations."""
     data_store = DataStore(temp_data_file)
     
-    # Додавання запису
+    # Add log
     log1 = WaterLog(amount_ml=250, timestamp=1622548800.0, note="Morning")
     assert data_store.add_water_log(log1) is True
     
-    # Додавання ще одного запису
+    # Add another log
     log2 = WaterLog(amount_ml=300, timestamp=1622552400.0, note="Afternoon")
     assert data_store.add_water_log(log2) is True
     
-    # Отримання всіх записів
+    # Get all logs
     logs = data_store.get_water_logs()
     assert len(logs) == 2
     
-    # Перевірка першого запису
+    # Check first log
     index1, log1_loaded = logs[0]
     assert index1 == 0
     assert log1_loaded.amount_ml == 250
     assert log1_loaded.timestamp == 1622548800.0
     assert log1_loaded.note == "Morning"
     
-    # Оновлення запису
+    # Update log
     updated_log = WaterLog(amount_ml=200, timestamp=1622548800.0, note="Updated note")
     assert data_store.update_water_log(0, updated_log) is True
     
-    # Перевірка оновленого запису
+    # Check updated log
     logs = data_store.get_water_logs()
     index, log = logs[0]
     assert log.amount_ml == 200
     assert log.note == "Updated note"
     
-    # Видалення запису
+    # Delete log
     assert data_store.delete_water_log(0) is True
     
-    # Перевірка, що запис видалено
+    # Check if log is deleted
     logs = data_store.get_water_logs()
     assert len(logs) == 1
-    assert logs[0][0] == 0  # Після видалення індекси оновлюються
+    assert logs[0][0] == 0  # After deletion, indices are updated
 
 
 def test_get_water_logs_by_period(temp_data_file):
     """Тест отримання записів за період."""
     data_store = DataStore(temp_data_file)
     
-    # Додавання записів за різні дні
+    # Add logs for different days
     log1 = WaterLog(amount_ml=250, timestamp=1622548800.0)  # 2021-06-01 12:00:00
     log2 = WaterLog(amount_ml=300, timestamp=1622635200.0)  # 2021-06-02 12:00:00
     log3 = WaterLog(amount_ml=350, timestamp=1622721600.0)  # 2021-06-03 12:00:00
@@ -151,14 +145,14 @@ def test_get_water_logs_by_period(temp_data_file):
     data_store.add_water_log(log2)
     data_store.add_water_log(log3)
     
-    # Отримання записів за конкретний період
+    # Get logs for specific period
     logs = data_store.get_water_logs(start_time=1622548800.0, end_time=1622635200.0)
     assert len(logs) == 2
     
-    # Отримання записів тільки з початкової дати
+    # Get logs only from start date
     logs = data_store.get_water_logs(start_time=1622635200.0)
     assert len(logs) == 2
     
-    # Отримання записів тільки до кінцевої дати
+    # Get logs only to end date
     logs = data_store.get_water_logs(end_time=1622635200.0)
     assert len(logs) == 2 

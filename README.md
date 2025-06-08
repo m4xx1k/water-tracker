@@ -1,47 +1,47 @@
 # Water Tracker
 
-Одно-користувацька програма для відстеження споживання води з GUI на основі ttkbootstrap.
+Single-user water tracking application with ttkbootstrap-based GUI.
 
-## Функціональність
+## Features
 
-- Створення/редагування профілю користувача
-- Додавання/редагування/видалення записів про вживання води
-- Панель стану з відсотками виконання
-- Відображення історії за обраний період
-- Експорт/імпорт даних у JSON з контрольною сумою (sha256)
-- Нагадування (опціонально)
+- Create/edit user profile
+- Add/edit/delete water consumption records
+- Status panel with progress percentage
+- History view for selected period
+- Data export/import to JSON with checksum (sha256)
+- Reminders (optional)
 
-## Вимоги
+## Requirements
 
 - Python 3.10+
 - ttkbootstrap
 
-## Встановлення та запуск
+## Installation & Running
 
 ```bash
-# Клонувати репозиторій
+# Clone repository
 git clone https://github.com/yourusername/water-tracker.git
 cd water-tracker
 
-# Встановити залежності за допомогою uv
+# Install dependencies using uv
 uv pip install -r requirements.txt
 
-# Запустити програму
+# Run application
 python main.py
 ```
 
-## Структура проекту
+## Project Structure
 
-- `model/` - Класи моделей даних
-- `services/` - Бізнес-логіка програми
-- `repository/` - Робота зі сховищем даних
-- `ui/` - Компоненти інтерфейсу користувача
-- `util/` - Допоміжні функції
-- `tests/` - Тести
+- `model/` - Data model classes
+- `services/` - Business logic
+- `repository/` - Data storage handling
+- `ui/` - User interface components
+- `util/` - Helper functions
+- `tests/` - Tests
 
-## Тестування
+## Testing
 
 ```bash
-# Запуск тестів з покриттям
+# Run tests with coverage
 pytest --cov=.
 ```

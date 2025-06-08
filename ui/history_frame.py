@@ -1,5 +1,5 @@
 """
-Фрейм для перегляду історії вживання води.
+Frame for viewing water consumption history.
 """
 
 import tkinter as tk
@@ -14,19 +14,19 @@ from services.water_log_service import WaterLogService
 
 
 class EditWaterLogDialog(tk.Toplevel):
-    """Діалог для редагування запису про вживання води."""
+    """Dialog for editing a water consumption record."""
     
     def __init__(self, parent, water_log_service: WaterLogService, 
                 log_index: int, log: WaterLog, on_edit: Callable[[], None]):
         """
-        Ініціалізує діалог редагування запису про вживання води.
+        Initializes the water log editing dialog.
         
         Args:
-            parent: Батьківський віджет.
-            water_log_service: Сервіс записів про вживання води.
-            log_index: Індекс запису в списку.
-            log: Об'єкт запису про вживання води.
-            on_edit: Callback-функція, яка викликається після редагування запису.
+            parent: Parent widget.
+            water_log_service: Water log service.
+            log_index: Record index in the list.
+            log: Water consumption record object.
+            on_edit: Callback function called after editing the record.
         """
         super().__init__(parent)
         self.title("Edit Water Log")
@@ -39,14 +39,14 @@ class EditWaterLogDialog(tk.Toplevel):
         self.log = log
         self.on_edit = on_edit
         
-        # Змінні
+        # Variables
         self.amount_var = ttk.IntVar(value=log.amount_ml)
         self.note_var = ttk.StringVar(value=log.note or "")
         
-        # Віджети
+        # Widgets
         self.create_widgets()
         
-        # Розміщення вікна
+        # Window placement
         self.update_idletasks()
         width = self.winfo_width()
         height = self.winfo_height()
@@ -55,11 +55,11 @@ class EditWaterLogDialog(tk.Toplevel):
         self.geometry(f"{width}x{height}+{x}+{y}")
     
     def create_widgets(self):
-        """Створює віджети діалогу."""
+        """Creates dialog widgets."""
         frame = ttk.Frame(self, padding=20)
         frame.pack(fill=BOTH, expand=YES)
         
-        # Час запису
+        # Record time
         time_frame = ttk.Frame(frame)
         time_frame.pack(fill=X, pady=10)
         
@@ -72,7 +72,7 @@ class EditWaterLogDialog(tk.Toplevel):
         )
         time_value.pack(side=LEFT, fill=X, expand=YES)
         
-        # Кількість води
+        # Water amount
         amount_frame = ttk.Frame(frame)
         amount_frame.pack(fill=X, pady=10)
         
@@ -85,7 +85,7 @@ class EditWaterLogDialog(tk.Toplevel):
         amount_unit = ttk.Label(amount_frame, text="ml", width=5)
         amount_unit.pack(side=LEFT, padx=5)
         
-        # Кнопки швидкого вибору кількості
+        # Quick edit buttons
         quick_frame = ttk.Frame(frame)
         quick_frame.pack(fill=X, pady=10)
         
@@ -101,7 +101,7 @@ class EditWaterLogDialog(tk.Toplevel):
             )
             quick_button.pack(side=LEFT, padx=2)
         
-        # Примітка
+        # Note
         note_frame = ttk.Frame(frame)
         note_frame.pack(fill=X, pady=10)
         
@@ -111,7 +111,7 @@ class EditWaterLogDialog(tk.Toplevel):
         note_entry = ttk.Entry(note_frame, textvariable=self.note_var)
         note_entry.pack(side=LEFT, fill=X, expand=YES)
         
-        # Кнопки
+        # Buttons
         button_frame = ttk.Frame(frame)
         button_frame.pack(fill=X, pady=(20, 0))
         
@@ -140,7 +140,7 @@ class EditWaterLogDialog(tk.Toplevel):
         cancel_button.pack(side=RIGHT, padx=5)
     
     def update_water_log(self):
-        """Оновлює запис про вживання води."""
+        """Updates a water consumption record."""
         try:
             amount = self.amount_var.get()
             note = self.note_var.get()
@@ -152,13 +152,13 @@ class EditWaterLogDialog(tk.Toplevel):
                 )
                 return
             
-            # Оновлюємо запис
+            # Update record
             self.water_log_service.update_water_log(self.log_index, amount, note)
             
-            # Викликаємо callback
+            # Call callback
             self.on_edit()
             
-            # Закриваємо діалог
+            # Close dialog
             self.destroy()
             
         except Exception as e:
@@ -168,15 +168,15 @@ class EditWaterLogDialog(tk.Toplevel):
             )
     
     def delete_water_log(self):
-        """Видаляє запис про вживання води."""
+        """Deletes a water consumption record."""
         try:
-            # Видаляємо запис
+            # Delete record
             self.water_log_service.delete_water_log(self.log_index)
             
-            # Викликаємо callback
+            # Call callback
             self.on_edit()
             
-            # Закриваємо діалог
+            # Close dialog
             self.destroy()
             
         except Exception as e:
@@ -187,33 +187,33 @@ class EditWaterLogDialog(tk.Toplevel):
 
 
 class HistoryFrame(ttk.Frame):
-    """Фрейм для перегляду історії вживання води."""
+    """Frame for viewing water consumption history."""
     
     def __init__(self, parent, water_log_service: WaterLogService, 
                 on_data_changed: Callable[[], None]):
         """
-        Ініціалізує фрейм історії.
+        Initializes the history frame.
         
         Args:
-            parent: Батьківський віджет.
-            water_log_service: Сервіс записів про вживання води.
-            on_data_changed: Callback-функція, яка викликається при зміні даних.
+            parent: Parent widget.
+            water_log_service: Water log service.
+            on_data_changed: Callback function called when data changes.
         """
         super().__init__(parent)
         
         self.water_log_service = water_log_service
         self.on_data_changed = on_data_changed
         
-        # Дати вибірки за замовчуванням (останній тиждень)
+        # Default date range (last week)
         self.end_date = datetime.now().date()
         self.start_date = self.end_date - timedelta(days=7)
         
-        # Створення інтерфейсу
+        # Create interface
         self.create_widgets()
     
     def create_widgets(self):
-        """Створює віджети фрейму."""
-        # Верхня панель
+        """Creates frame widgets."""
+        # Top panel
         header_frame = ttk.Frame(self)
         header_frame.pack(fill=X, pady=10)
         
@@ -224,11 +224,11 @@ class HistoryFrame(ttk.Frame):
         )
         title_label.pack()
         
-        # Панель вибору періоду
+        # Period selection panel
         date_frame = ttk.Frame(self)
         date_frame.pack(fill=X, padx=20, pady=10)
         
-        # Кнопки швидкого вибору періоду
+        # Quick period selection buttons
         period_frame = ttk.Frame(date_frame)
         period_frame.pack(side=LEFT, fill=Y)
         
@@ -244,7 +244,7 @@ class HistoryFrame(ttk.Frame):
             )
             period_button.pack(side=LEFT, padx=2)
         
-        # Вибір діапазону дат
+        # Date range selection
         range_frame = ttk.Frame(date_frame)
         range_frame.pack(side=RIGHT, fill=Y)
         
